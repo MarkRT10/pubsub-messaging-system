@@ -32,9 +32,8 @@ from common.protocol import FrameStream, ProtocolError
 log = logging.getLogger("subscriber")
 
 
-# --------------------------------------------------------------------------
 # T5 - seen-ID file
-# --------------------------------------------------------------------------
+
 class SeenStore:
     """msg_ids already processed, kept in a text file (one id per line) so
     duplicate detection survives a restart. The id is written right after the
@@ -62,9 +61,8 @@ class SeenStore:
         self._fh.close()
 
 
-# --------------------------------------------------------------------------
 # T3 - alert line
-# --------------------------------------------------------------------------
+
 def format_alert(frame: Dict[str, Any]) -> str:
     """e.g. [14:02:11] [BACKLOG] [RETRY 2] crypto  BTC 97100 (+0.30%)  from=crypto-feed  id=86578292"""
     ts = frame.get("timestamp")
@@ -88,9 +86,8 @@ def format_alert(frame: Dict[str, Any]) -> str:
             f"from={frame.get('publisher_id', '?')}  id={str(frame.get('msg_id', ''))[:8]}")
 
 
-# --------------------------------------------------------------------------
 # The client
-# --------------------------------------------------------------------------
+
 class SubscriberClient:
     def __init__(self, client_id: str, topics: List[str]):
         P.validate_client_id(client_id)
@@ -213,9 +210,8 @@ class SubscriberClient:
         stream.send({"type": P.ACK, "msg_id": msg_id})             # T4: ACK after processing
 
 
-# --------------------------------------------------------------------------
 # CLI (T2)
-# --------------------------------------------------------------------------
+
 def main(argv: Optional[List[str]] = None) -> int:
     p = argparse.ArgumentParser(prog="subscriber", description="Pub/Sub subscriber client")
     p.add_argument("--id", required=True, help="persistent client_id (keep it the same across restarts)")
